@@ -27,6 +27,16 @@ class EmojiTableViewController: UITableViewController {
        self.navigationItem.leftBarButtonItem = self.editButtonItem
 
     }
+    
+    @IBAction func unwindSegue(segue: UIStoryboardSegue) {
+        guard segue.identifier == "saveSegue" else { return }
+        let sourceVC = segue.source as! NewEmojiTableViewController
+        let emoji  = sourceVC.emoji
+        
+        let newIndexPath = IndexPath(row: objects.count, section: 0)
+        objects.append(emoji)
+        tableView.insertRows(at: [newIndexPath], with: .fade)
+    }
 
     // MARK: - Table view data source
 
@@ -78,7 +88,7 @@ class EmojiTableViewController: UITableViewController {
    
     
     func doneActoin(at indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .destructive, title: "Done") { (action, biew, completion) in
+        let action = UIContextualAction(style: .destructive, title: "Done") { (action, view, completion) in
             self.objects.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
             completion(true)
@@ -95,7 +105,7 @@ class EmojiTableViewController: UITableViewController {
             self.objects[indexPath.row] = object
             complection(true)
         }
-        action.backgroundColor = object.isFavourite ? .systemPurple : .systemGray
+        action.backgroundColor = object.isFavourite ? .systemRed : .systemGray
         action.image = UIImage(systemName: "heart")
         return action
     }
